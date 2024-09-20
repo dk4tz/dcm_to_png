@@ -1,97 +1,60 @@
-Convert DICOM Files to PNG
-===========================
+# DICOM to PNG Converter
 
-[![CircleCI](https://circleci.com/gh/danishm/mritopng.svg?style=shield)](https://circleci.com/gh/danishm/mritopng) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+This Python script converts DICOM (Digital Imaging and Communications in Medicine) files to PNG (Portable Network Graphics) format. It's designed to handle various types of DICOM images, including grayscale, RGB, and multi-slice images.
+    
+It is a modernized (2024), slimmed down fork of @danishm's [mritopng](https://github.com/danishm/mritopng)
 
-*Important Changes*
-  - **8/26/2018** - Ability to apply auto-contrast to the converted images
+## Features
 
-Introduction
-------------
-A simple python module to make it easy to batch convert a binary DICOM file, which is usually an output from
-an MRI scan to a PNG image.
+- Converts DICOM files to PNG format
+- Handles 2D (grayscale), 3D (RGB), and multi-slice images
+- Maintains folder structure when converting multiple files
+- Provides detailed logging of the conversion process
 
-The MRI scanning facilities typically hand you a CD containing your MRI scans. This CD will typically not contain
-any image files in traditional formats that can be opened up by your default image viewing program. The CD contains
-a list of DICOM files, which can only be viewed by the included viewer, which is mostly only supported on a Windows machine.
+## Requirements
 
-This module should help you convert all the DICOM based scans to PNG files. This tool can be used as a command line tools as well as a library in your python code
+- Python 3.6+
+- pydicom
+- pypng
+- numpy
 
-Installation
-------------
+You can install the required packages using pip:
 
-To have known to work dependencies use beforehand::
-
-    pip install -r requirements.txt
-
-`mritopng` comes with a `setup.py` script to use with distutils. After unpacking the distribution, `cd` into the directory and execute the command::
-
-    python setup.py install
-
-
-This will install two things
-
- * The `mritopng` module will be installed; `import mritopng` will allow you to use it
- * A command line utility called `mritopng` which can be used from the console
-
-Quick Start
------------
-`mritopng` will install a command line utility that can be used to convert individual DICOM files or folders
-
-### Getting Help
-
+```bash
+pip install pydicom pypng numpy
 ```
-$ mritopng --help
-usage: mritopng [-h] [-f] [-c] dicom_path png_path
+    
+    
+## Usage
 
-Convert a dicom MRI file to png. To conver a whole folder recursivly, use the
--f option
+1. Clone this repository or download the `mritopng.py` script.
 
-positional arguments:
-  dicom_path           Full path to the mri file
-  png_path             Full path to the generated png file
+2. Run the script from the command line, providing the input DICOM folder and output PNG folder as arguments:
 
-optional arguments:
-  -h, --help           show this help message and exit
-  -f, --folder         Convert a whole folder instead of a single file
-  -c, --auto-contrast  Apply contrast after converting default image
-```
+   ```bash
+   python mritopng.py /path/to/dicom/folder /path/to/output/png/folder
+   ```
 
-### Convert Single File
+   For example:
 
-```sh
-# Converts the file /DICOM/SCAN1 to a file called output.png,
-# while applying auto contrast
-$ mritopng --auto-contrast /DICOM/SCAN1 output.png
-```
+   ```bash
+   python mritopng.py ~/Downloads/My_MRI ~/Downloads/My_PNG
+   ```
 
-**Note:** If file `output.png` already exists, it will be overwritten
+3. The script will process all DICOM files in the input folder (including subfolders) and save the converted PNG files in the output folder, maintaining the original folder structure.
 
-### Convert Folder Tree
+4. Check the `mritopng.log` file for detailed information about the conversion process, including any errors or warnings.
 
-The utility can also be used to convert a whole folder recursively by using the `-f` option::
+## Notes
 
-```sh
-# Takes all the files in /DICOM, converts the files to png and
-# puts them in the /PNG folder with the same structure as /DICOM. 
-$ mritopng -f /DICOM /PNG
-```
+- For multi-slice images, the script converts only the first slice and logs a message.
+- If a DICOM file cannot be converted, the script logs an error and continues with the next file.
+- The script normalizes pixel values to the 0-255 range for consistent PNG output.
 
-**Note:**
- - Existing top level folder will NOT be over-written e.g. the example above will fail of the folder `/PNG` already exists
- - The tool will try to convert as many files as it can, skipping the ones that it can't
+## Contributing
 
-Using it as a Library
----------------------
+Contributions to improve the script are welcome. Please feel free to submit a Pull Request.
 
-It's pretty easy to get up and running with `mritopng` in your own project
+## License
 
-```py
-import mritopng
-
-# Convert a single file with auto-contrast
-mritopng.convert_file('/home/user/DICOM/SCAN1', '/home/user/output.png', auto_contrast=True)
-
-# Convert a whole folder recursively
-mritopng.convert_folder('/home/user/DICOM/', '/home/user/PNG/')
-```
+This project is licensed under the [MIT License](https://opensource.org/license/mit)
